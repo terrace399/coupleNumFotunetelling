@@ -18,9 +18,10 @@ class App extends React.Component {
         // <Footer />
         // <Todo />
         // <h2>アプリ２</h2>
+        // <InputForm />
         }
         <Prime />
-        <InputForm />
+
       </div>
     )
   }
