@@ -73,9 +73,26 @@ export default class Prime extends React.Component {
       firstNum: randoms[0],
       secondNum: randoms[1],
     })
-    this.putNumbers();
+    this.putMessages();
   }
-
+  setCommonComment = (quantity) => {
+    var commonComment;
+    if(quantity == 2){
+      commonComment = `21組に1組のカップルです！`;
+    }else if(quantity == 3){
+      commonComment = `21組に1組のカップルです！`;
+    }else if(quantity == 4){
+      commonComment = `405組に1組のカップルです！`;
+    }else if(quantity == 5){
+      commonComment = `88組に1組のカップルです！`;
+    }else if(6 <= quantity){
+      commonComment = `運命の人です！！`;
+    }
+    this.setState({
+      commonComment: commonComment,
+    })
+  }
+  //特殊コメントの設置
   setSpecialComment = (array) => {
     var specialComment;
     const first = array[0];
@@ -101,7 +118,6 @@ export default class Prime extends React.Component {
     }else if(engCheck){
       specialComment = '婚約数です！！';
       console.debug(specialComment);
-      console.debug(engCheck);
     }else if(first == second && first != ''){
       specialComment = '同じ数です!';
     }else if(first % second == 0){
@@ -111,8 +127,11 @@ export default class Prime extends React.Component {
       specialComment = `数Bが数Aの倍数です！`;
       console.debug(specialComment);
     }
+    this.setState({
+      specialComment: specialComment,
+    });
   }
-  putNumbers = () => {
+  putMessages = () => {
     //数字を取得
     let first = this.state.firstNum;
     let second = this.state.secondNum;
@@ -141,43 +160,51 @@ export default class Prime extends React.Component {
     //   debug: div,
     // });
     //ーーーーーーーーーーーーーーーーー
-
-    //メッセージのカテゴライジング
-    if(first == second && first != ''){
-      message = '同じ数です!';
-    }else if(first % second == 0){
-      message = `数Aが数Bの倍数です！共通の約数を${quantity}個持っています！`;
-      message += `共通の約数が${quantity}個ある確率は${this.getComDivData(quantity)[1]}%です`;
-      console.debug(message);
-    }else if(second % first == 0){
-      message = `数Bが数Aの倍数です！共通の約数を${quantity}個持っています！`;
-      message += `共通の約数が${quantity}個ある確率は${this.getComDivData(quantity)[1]}%です`;
-      console.debug(message);
-    }else if(quantity > 0){
-      var aboutDiv = this.getComDivData(quantity);
-      message = `共通の約数を${quantity}個持っています！`;
-      message += `共通の約数が${quantity}個ある確率は${aboutDiv[1]}%です`;
-      //共通約数の個数で場合分けする関数作りたい
-      console.debug(message);
+    var aboutDiv = this.getComDivData(quantity);
+    if(quantity == 0){
+      message = '互いに素です'
     }else{
-      message = '互いに素';
-      message += 'です';
+      message = `共通の約数を${quantity+1}個持っています！`;
+      message += `共通の約数が${quantity+1}個ある確率は${aboutDiv[1]}%です`;
     }
+    //共通約数の個数で場合分けする関数作りたい
+    // console.debug(message);
+    //メッセージのカテゴライジング
+    // if(first == second && first != ''){
+    //   message = '同じ数です!';
+    // }else if(first % second == 0){
+    //   message = `数Aが数Bの倍数です！共通の約数を${quantity}個持っています！`;
+    //   message += `共通の約数が${quantity}個ある確率は${this.getComDivData(quantity)[1]}%です`;
+    //   console.debug(message);
+    // }else if(second % first == 0){
+    //   message = `数Bが数Aの倍数です！共通の約数を${quantity}個持っています！`;
+    //   message += `共通の約数が${quantity}個ある確率は${this.getComDivData(quantity)[1]}%です`;
+    //   console.debug(message);
+    // }else if(quantity > 0){
+    //
+    // }else{
+    //   message = '互いに素';
+    //   message += 'です';
+    // }
     // ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
     //commentのセット関数＊２
+
     this.setState({
       message: message
     });
+    this.setSpecialComment(array);
+    this.setCommonComment(quantity);
   }
 
   //共通約数のパーセント
   getComDivData = (quantity) => {
     var data = [[0, 60.8383], [1, 27.5034], [2, 4.6931], [3, 4.8886], [4, 0.2475], [5, 1.1412], [6, 0.0144], [7, 0.4366], [8, 0.0566],[9, 0.0478], [11, 0.0977], [13, 0.0031], [14, 0.0034], [15, 0.0172], [17, 0.0059], [19, 0.0025], [20, 0.0001], [23, 0.0022], [26, 0.0001], [27, 0.0001], [29, 0.0001], [31, 0.0001]];
     for(var i = 0;i < data.length; i++){
-      if(quantity = data[i][0]){
+      if(quantity == data[i][0]){
         return data[i];
       }
     }
+    // return data[6];
   }
   render() {
     const { todos } = this.state;
@@ -196,7 +223,7 @@ export default class Prime extends React.Component {
       // <h2>{this.state.secondNum}</h2>
       }
       <button onClick={
-        () => this.putNumbers()} >登録</button>
+        () => this.putMessages()} >登録</button>
       <button onClick={
           () => this.setRandomNums()}>自動生成</button>
         <h2>message:{this.state.message}</h2>
